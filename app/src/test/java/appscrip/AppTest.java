@@ -4,15 +4,16 @@ import org.testng.annotations.*;
 import static org.testng.Assert.*;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.*;
 import java.io.*;
 import java.time.Duration;
 import java.util.List;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.Iterator;
 
 public class AppTest {
@@ -76,26 +77,22 @@ public class AppTest {
         Thread.sleep(2000);
 
         // WebElement firstNameInput =
-        // driver.findElement(By.xpath("//div[@class='jsx-214831360
-        // mt-1']//input[@id='newsleteremail']"));
+        // driver.findElement(By.xpath("//input[@name='firstName']"));
         // firstNameInput.sendKeys("Saurabh");
         // Thread.sleep(2000);
 
         // WebElement lastNameInput =
-        // driver.findElement(By.xpath("//div[@class='jsx-214831360 d-flex
-        // align-items-start position-relative flex-column
-        // mt-2']//input[@id='newsleteremail']"));
+        // driver.findElement(By.xpath("//input[@name='lastName']"));
         // lastNameInput.sendKeys("Kumar");
         // Thread.sleep(2000);
 
         // WebElement emailInput =
-        // driver.findElement(By.xpath("//div[@class='jsx-214831360 d-flex
-        // align-items-center position-relative mt-2 ']//input[@id='newsleteremail']"));
-        // emailInput.sendKeys("Srking7783@gmail.com.com");
+        // driver.findElement(By.xpath("//input[@name='email']"));
+        // emailInput.sendKeys("saurabhkumar993973@gmail.com");
         // Thread.sleep(2000);
 
         // WebElement doneButton =
-        // driver.findElement(By.xpath("//div[@class='jsx-4225831484 jss12']"));
+        // driver.findElement(By.xpath("//span[text()='DONE']"));
         // doneButton.click();
         // Thread.sleep(2000);
     }
@@ -111,34 +108,37 @@ public class AppTest {
         Thread.sleep(2000);
     }
 
-    // @Test(priority = 3)
-    // public void printProductDetailsToExcel() throws IOException {
-    //     // Locate product name and price elements
-    //     List<WebElement> productNames = driver.findElements(By.xpath("//span[contains(@class,'card_title')]"));
-    //     List<WebElement> productPrices = driver.findElements(By.xpath("//div[contains(@class,'price')]/span[contains(@class,'stroke')]"));
+    @Test(priority = 3)
+    public void printProductDetailsToExcel() throws IOException {
+        // Locate product name and price elements
+       // List<WebElement> productNames = driver.findElements(By.xpath("//span[contains(@class,'card_title')]"));
+       //List<WebElement> productPrices = driver.findElements(By.xpath("//div[contains(@class,'price')]/span[contains(@class,'stroke')]"));
 
-	// 	String filePath = "C:\\Users\\saura\\OneDrive\\Desktop\\SL-Projects\\Appscrip\\app\\product_details.xlsx";
-	// 	FileInputStream fs = new FileInputStream(filePath);
+        List<WebElement> productNames = driver.findElements(By.xpath("//div[@class='jsx-c3ec2b6b129f087d card_content_wrapper pt-0']//child::span[@class='jsx-c3ec2b6b129f087d card_title d-inline-block text-truncate w-100']"));
+        List<WebElement> productPrices = driver.findElements(By.xpath("//div[@class='jsx-c3ec2b6b129f087d price']"));
 
-    //     // Create an Excel workbook and sheet
-    //     XSSFWorkbook workbook = new XSSFWorkbook(fs);
-    //     XSSFSheet sheet = workbook.createSheet("Product Details");
+		String filePath = "C:\\Users\\saura\\OneDrive\\Desktop\\SL-Projects\\Appscrip\\app\\product_details.xlsx";
+		FileInputStream fs = new FileInputStream(filePath);
 
-    //     // Write product details to the Excel sheet
-    //     for (int i = 0; i < productNames.size(); i++) {
-    //         XSSFRow row = sheet.createRow(i);
-    //         row.createCell(0).setCellValue(productNames.get(i).getText());
-    //         row.createCell(1).setCellValue(productPrices.get(i).getText());
-    //     }
+        // Create an Excel workbook and sheet
+        XSSFWorkbook workbook = new XSSFWorkbook(fs);
+        XSSFSheet sheet = workbook.createSheet("Product Details");
 
-    //     // Write the workbook to a file and close resources
-    //     try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-    //         workbook.write(fileOut);
-    //         fileOut.close();
-    //     } finally {
-    //         workbook.close();
-    //     }
-    // }
+        // Write product details to the Excel sheet
+        for (int i = 0; i < productNames.size(); i++) {
+            XSSFRow row = sheet.createRow(i);
+            row.createCell(0).setCellValue(productNames.get(i).getText());
+            row.createCell(1).setCellValue(productPrices.get(i).getText());
+        }
+
+        // Write the workbook to a file and close resources
+        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+            workbook.write(fileOut);
+            fileOut.close();
+        } finally {
+            workbook.close();
+        }
+    }
 
     // @Test(priority = 3)
     // public void printProductDetailsToExcel() throws IOException {
@@ -222,9 +222,9 @@ public class AppTest {
 
     @Test(priority = 6)
     public void checkout() throws InterruptedException {
-        // WebElement newAddress = driver.findElement(By.xpath(("//span[text()='+ Add New Address']")));
-        // newAddress.click();
-        // Thread.sleep(2000);
+        WebElement newAddress = driver.findElement(By.xpath(("//span[text()='+ Add New Address']")));
+        newAddress.click();
+        Thread.sleep(2000);
 
         WebElement firstNameInput = driver.findElement(By.xpath("//input[@placeholder='Enter your first name']"));
         firstNameInput.sendKeys("S");
@@ -239,7 +239,7 @@ public class AppTest {
         Thread.sleep(2000);
 
         WebElement addressInput = driver.findElement(By.xpath("//input[@placeholder='Enter address']"));
-        addressInput.sendKeys("24th Battery PI");
+        addressInput.sendKeys("24 Battery PI");
         Thread.sleep(2000);
 
         WebElement zipInput = driver.findElement(By.xpath("//input[@placeholder='Enter zip code']"));
@@ -275,45 +275,86 @@ public class AppTest {
         Thread.sleep(2000);
 
         WebElement nameOnCardInput = driver.findElement(By.xpath("//input[@id='full_name']"));
-        nameOnCardInput.sendKeys("Saurabh K");
+        nameOnCardInput.sendKeys("Saurabh Kumar");
         Thread.sleep(2000);
 
+        // Switch to the iframe containing the card number input
+        WebElement cardIframe = driver.findElement(By.xpath("//iframe[contains(@id, 'spreedly-number-frame')]"));
+        driver.switchTo().frame(cardIframe);
+
+        // Locate the card number input element within the iframe
         WebElement cardNumberInput = driver.findElement(By.xpath("//input[@id='card_number']"));
         cardNumberInput.sendKeys("4242 4242 4242 4242");
         Thread.sleep(2000);
 
+        // Switch back to the default content
+        driver.switchTo().defaultContent();
+
+        // WebElement cardNumberInput = driver.findElement(By.xpath("//input[@id='card_number']"));
+        // cardNumberInput.sendKeys("4242 4242 4242 4242");
+        // Thread.sleep(2000);
+
+        
+
+        // Locate the iframe and switch to it
+        WebElement iframe = driver.findElement(By.xpath("//iframe[contains(@id, 'spreedly-cvv-frame')]"));
+        driver.switchTo().frame(iframe);
+
+        // Locate the CVV input element within the iframe
         WebElement cvvInput = driver.findElement(By.xpath("//input[@id='cvv']"));
         cvvInput.sendKeys("111");
         Thread.sleep(2000);
 
-        Select expMonthSelect = new Select(driver.findElement(By.xpath("//input[@id='month']")));
-        expMonthSelect.selectByVisibleText("05");
+        // Switch back to the default content
+      //  driver.switchTo().defaultContent();
+
+        // WebElement cvvInput = driver.findElement(By.xpath("//input[@id='cvv']"));
+        // cvvInput.sendKeys("111");
+        // Thread.sleep(2000);
+
+       // Switch back to the default content
+       driver.switchTo().defaultContent();
+
+       // Locate the expiration month and year input elements directly
+       WebElement expMonthInput = driver.findElement(By.xpath("//input[@id='month']"));
+       WebElement expYearInput = driver.findElement(By.xpath("//input[@id='year']"));
+       expMonthInput.sendKeys("05");
+       expYearInput.sendKeys("2026");
+       Thread.sleep(2000);
+
+        WebElement cardAddButton = driver.findElement(By.xpath("//button[@id='sumbitbutton']"));
+        cardAddButton.click();
         Thread.sleep(2000);
 
-        Select expYearSelect = new Select(driver.findElement(By.xpath("//input[@id='year']")));
-        expYearSelect.selectByVisibleText("2026");
-        Thread.sleep(2000);
-
-        WebElement confirmOrderButton = driver.findElement(By.xpath("//button[@id='sumbitbutton']"));
+        WebElement confirmOrderButton = driver.findElement(By.xpath("//button[text()='Confirm Order & Checkout']"));
         confirmOrderButton.click();
-        Thread.sleep(2000);
+        Thread.sleep(5000);
 
-        WebElement closeDealButton = driver.findElement(By.className("close-deal"));
-        closeDealButton.click();
+
+        // WebElement closeButton = driver.findElement(By.xpath("//div[contains(@class, 'MuiDialog-paperScrollPaper')]//svg[@data-testid='CloseIcon']"));
+        // // Click on the cross (close) button
+        // closeButton.click();
+        // Thread.sleep(2000);
 
         Thread.sleep(10000); // Wait to be redirected to order page
-        WebElement orderIdElement = driver.findElement(By.id("order-id"));
+        // Locate the order ID element using an appropriate selector
+
+
+        WebElement orderIdElement = driver.findElement(By.xpath("//span[contains(@class, 'orderNum')]"));
         String orderId = orderIdElement.getText();
         System.out.println("Order ID: " + orderId);
+        Thread.sleep(2000);
     }
 
     @Test(priority = 8)
-    public void logout() {
-    WebElement profileIcon = driver.findElement(By.id("profile"));
+    public void logout() throws InterruptedException {
+    WebElement profileIcon = driver.findElement(By.xpath("//span[text()='Saurabh Kumar']"));
     profileIcon.click();
+    Thread.sleep(2000);
 
-    WebElement logoutLink = driver.findElement(By.id("logout"));
+    WebElement logoutLink = driver.findElement(By.xpath("//p[text()='Logout']"));
     logoutLink.click();
+    Thread.sleep(2000);
     }
 
     @AfterSuite
